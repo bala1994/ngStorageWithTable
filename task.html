@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Hello AngularJS - Add Table Row Dynamically</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/angular.min.js"></script>
+  <script src="js/ngStorage.min.js"></script>
+</head>
+<body>
+<div ng-app="appTable">
+  <div ng-controller="appController">
+
+    <input type="text" ng-model="user.name"/><br/>
+    <input type="text" ng-model="user.dept"/><br/>
+    <input type="hidden" ng-model="user.key"/><br/>
+    <button  ng-click="add(user)" > Add </button><br/>
+    <table>
+      <th>
+      <td>S.No</td>
+      <td>Name</td>
+      <td>Dept</td>
+      <td>Delete</td>
+      </th>
+      <tr ng-repeat="employee in contactList">
+        <td>{{$index}}</td>
+        <td>{{employee.name}}</td>
+        <td>{{employee.dept}}</td>
+        <td><input type="button" value="D" ng-click="remove($index)" /></td>
+        <td><input type="button" value="E" ng-click="edit(employee.key)" /></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<script>
+  var app = angular.module("appTable",['ngStorage']);
+  app.controller("appController",function($scope, $localStorage) {
+    $scope.user = {};
+    $scope.user.name = "";
+    $scope.user.dept = "";
+    $scope.user.key = "";
+
+    //load if any data present in localStorage - this helps when page reload
+    if($localStorage.list){
+      $scope.contactList = $localStorage.list
+    } else {
+      $scope.contactList = [];
+      $localStorage.list = [];
+    }
+
+    function randomNumber() {
+      var x = Math.floor((Math.random() * 1000) + 1);
+      return x;
+    }
+
+    $scope.add = function(user){
+      //if key is comming then we need to edit else it is new record so insert
+      if(user.key == "" || user.key == null){
+        var arrayOfObjs = $localStorage.list || [];
+        var temp = { name: user.name, dept: user.dept, key: randomNumber() };
+        arrayOfObjs.push(temp);
+        $localStorage.list = arrayOfObjs;
+        contactList = $localStorage.list;
+        clear();
+      } else {
+        //find the obj using key and replace the text
+        var data = $localStorage.list;
+        for(var i =0; i< data.length; i++){
+          if(data[i].key === user.key) {
+            data[i].name = user.name;
+            data[i].dept = user.dept;
+            continue;
+          }
+        }
+        $localStorage.list = data;
+        clear();
+      }
+    }
+
+    $scope.remove = function(obj){
+      //deleting with index is easy than deleting using key so keep this as it is.
+      clear();
+      if(obj != -1) {
+        var data = $localStorage.list;
+        data.splice(obj, 1);
+        $localStorage.list = data
+      }
+    }
+
+    $scope.edit = function(key){
+      //using key find which record we need to edit and pass it to the textbox and hidden input (we are passing key to hidden input bcoz we need to know which record we are going to update)
+      var temp;
+      var data = $localStorage.list;
+      for(var i =0; i< data.length; i++){
+        if(data[i].key === key) {
+          temp = data[i];
+          continue;
+        }
+      }
+      $scope.user.name = temp.name;
+      $scope.user.dept = temp.dept;
+      $scope.user.key = temp.key;
+    }
+
+    function clear(){
+      $scope.user.name = "";
+      $scope.user.dept = "";
+      $scope.user.key = "";
+    }
+
+  });
+</script>
+
+
+</body>
+</html>

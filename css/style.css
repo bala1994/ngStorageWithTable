@@ -1,0 +1,43 @@
+body {
+    background-color: #eee;
+}
+
+/*header style*/
+
+.navbar-custom {
+    background-color: palevioletred;
+}
+/* footer style */
+
+#footerArea{
+    position:fixed;
+    height:50px;
+    background-color:palevioletred;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    margin-bottom:0px;
+    padding-top: 1%;
+
+}
+/* home page style */
+
+.boxArea{
+background-color: white;
+/*width: 300px;*/
+border: 5px solid pink;
+/*padding: 25px;*/
+margin: 10px;
+}
+*[role="form"] {
+    max-width: 530px;
+    margin: 0 auto;
+    border-radius: 0.3em;
+}
+
+*[role="form"] h2 {
+    margin-left: 5em;
+    margin-bottom: 1em;
+}
+
+/*contact page styles */
